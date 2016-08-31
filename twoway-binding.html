@@ -1,0 +1,120 @@
+<html>
+    <head>
+        <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
+    </head>
+    <body>
+        <div ng-app="myApp" ng-controller="myCtrl">
+            <table border='0' cellspacing='0' cellpadding='10'>
+                <tr>
+                    <td>ISBN:</td>
+                    <td><input type="text" ng-model="item.ISBN" /></td>
+                </tr>
+                <tr>
+                    <td>Name:</td>
+                    <td><input type="text" ng-model="item.Name" /></td>
+                </tr>
+                <tr>
+                    <td>Price:</td>
+                    <td><input type="text" ng-model="item.Price" /></td>
+                </tr>
+                <tr>
+                    <td>Quantity:</td>
+                    <td><input type="text" ng-model="item.Quantity" /></td>
+                </tr>
+                <tr>
+                    <td><input type="button" value="Add to List" ng-click="addItem(item)" /></td>
+                </tr>
+            </table>
+            <br>
+            <br>
+            <table border='1' cellspacing='0' cellpadding='10'>
+            
+                <tr>
+                     <td>ISBN</td>
+                    <td>Name</td>
+                    <td>Price</td>
+                    <td>Quantity</td>
+                    <td>Total Price</td>
+                    <td>Action</td>
+                </tr>
+                <tr ng-repeat="item in items">
+                    <td>{{item.ISBN}}</td>
+                    <td>
+                        <span ng-hide="editMode">{{item.Name}}</span>
+                        <input type="text" ng-show="editMode" ng-model="item.Name" />
+                    </td>
+                    <td>
+                        <span ng-hide="editMode">{{item.Price}}</span>
+                        <input type="text" ng-show="editMode" ng-model="item.Price" />
+                    </td>
+                    <td>
+                        <span ng-hide="editMode">{{item.Quantity}}</span>
+                        <input type="text" ng-model="item.Quantity" ng-show="editMode" />
+                        
+                    </td>
+                    <td>{{(item.Price)*(item.Quantity)}}</td>
+                    <td>
+                        <span>
+                            <button type="submit" ng-hide="editMode"  
+                                    ng-click="editMode=true;editItem(item)">Edit</button>
+                        </span>
+                        <span>
+                            <button type="submit" ng-show="editMode"
+                                    ng-click="editMode=false">Save</button>
+                        </span>
+                        <input type="button" value="Delete" ng-click="removeItem($index)">
+                    </td>
+                </tr>
+            
+            </table>
+            <br>
+            <br>
+            <div>Grand Total: {{totalPrice()}}</div>
+            <script>
+             var ang=angular.module("myApp",[]);
+                ang.controller("myCtrl",function($scope){
+                   $scope.items=[
+                       
+                       {ISBN:"566116",Name:"First",Price:560,Quantity:5},
+                       {ISBN:"549091",Name:"Second",Price:450,Quantity:2},
+                       {ISBN:"540959",Name:"Third",Price:150,Quantity:6},
+                       {ISBN:"625406",Name:"Fourth",Price:210,Quantity:1}
+                    
+                   ]; 
+                    $scope.editing=false;
+                    $scope.addItem=function(item){
+                        $scope.items.push(item);
+                        $scope.item={};
+                    }
+                    $scope.totalPrice=function(){
+                        
+                        var total=0;
+                        for(count=0;count<$scope.items.length;count++){
+                            total += $scope.items[count].Price*$scope.items[count].Quantity;
+                        }
+                        return total;
+                    }
+                    $scope.removeItem=function(index){
+                        $scope.items.splice(index,1);
+                        
+                    }
+                    $scope.editItem=function(index){
+                        $scope.editing=$scope.items.indexOf(index);
+                    }
+                    $scope.saveFiled=function(index){
+                        if($scope.editing !== false){
+                            $scope.editing=false;
+                        }
+                    };
+                    $scope.cancel=function(index){
+                        if($scope.editing !== false){
+                            $scope.editing= false;
+                        }
+                    };
+                    
+                    
+                });
+            </script>
+        </div>
+    </body>
+</html>
